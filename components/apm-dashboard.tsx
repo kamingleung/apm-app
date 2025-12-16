@@ -51,7 +51,7 @@ const mockAlerts = [
 
 export function APMDashboard() {
   return (
-    <main className="@container min-h-screen bg-background p-6">
+    <div className="@container min-h-screen bg-background p-6">
       <div className="mx-auto max-w-7xl space-y-6">
         {/* Header */}
         <header className="flex items-center justify-between">
@@ -190,7 +190,7 @@ export function APMDashboard() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   )
 }
 

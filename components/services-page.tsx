@@ -125,7 +125,7 @@ export function ServicesPage() {
   )
 
   return (
-    <main className="@container min-h-screen bg-background">
+    <div className="@container min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card px-6 py-4">
         <div className="flex items-center justify-between">
@@ -372,7 +372,7 @@ export function ServicesPage() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </div>
   )
 }
 
