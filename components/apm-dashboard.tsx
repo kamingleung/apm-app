@@ -26,6 +26,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 // Mock data for the dashboard
 const mockMetrics = {
@@ -56,6 +63,17 @@ export function APMDashboard() {
         {/* Header */}
         <header className="flex items-center justify-between">
           <div>
+            <Breadcrumb className="mb-2">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>APM</BreadcrumbPage>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Overview</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
             <h1 className="text-3xl font-bold text-foreground">APM Dashboard</h1>
             <p className="text-muted-foreground">
               Monitor your application performance in real-time

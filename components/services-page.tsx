@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { 
   AlertTriangle, 
   CheckCircle, 
@@ -30,6 +31,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 // Mock data for services with highest fault rates
 const topFaultServices = [
@@ -127,9 +136,22 @@ export function ServicesPage() {
   return (
     <div className="@container min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card px-6 py-4">
+      <header className="bg-card px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
+            <Breadcrumb className="mb-2">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href="/">APM</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Services</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
             <h1 className="text-2xl font-bold text-foreground">Services</h1>
           </div>
           <div className="flex items-center gap-3">
@@ -415,7 +437,12 @@ function ServiceRow({ service }: { service: typeof allServices[0] }) {
                               'rgb(239 68 68)' 
             }}
           />
-          <span className="font-medium text-foreground">{service.name}</span>
+          <Link 
+            href={`/services/${service.name}`}
+            className="font-medium text-primary hover:text-primary/80 underline underline-offset-2 hover:underline-offset-4 transition-all cursor-pointer"
+          >
+            {service.name}
+          </Link>
         </div>
       </td>
       <td className="py-3 px-4">
