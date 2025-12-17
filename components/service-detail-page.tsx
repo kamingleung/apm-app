@@ -11,7 +11,10 @@ import {
   TrendingUp,
   BarChart3,
   Zap,
-  Database
+  Database,
+  Settings,
+  GitBranch,
+  Search
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -28,6 +31,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 interface ServiceDetailPageProps {
   serviceName: string
@@ -159,14 +163,27 @@ export function ServiceDetailPage({ serviceName }: ServiceDetailPageProps) {
                 </Badge>
               )}
             </div>
-            {service.description !== "Service information not available" && (
+            {/* {service.description !== "Service information not available" && (
               <p className="text-muted-foreground">{service.description}</p>
-            )}
+            )} */}
           </div>
         </div>
       </header>
 
-      <div className="p-6 space-y-6">
+      {/* Tabs Navigation */}
+      <div className="px-6">
+        <Tabs defaultValue="overview">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="operations">Service operations</TabsTrigger>
+            <TabsTrigger value="dependencies">Dependencies</TabsTrigger>
+            <TabsTrigger value="service-map">Service map</TabsTrigger>
+            <TabsTrigger value="traces">Traces</TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab Content */}
+          <TabsContent value="overview">
+            <div className="space-y-6">
         {/* Service Overview */}
         <div className="grid grid-cols-1 @md:grid-cols-2 @xl:grid-cols-4 gap-4">
           <Card>
@@ -354,6 +371,109 @@ export function ServiceDetailPage({ serviceName }: ServiceDetailPageProps) {
             </CardContent>
           </Card>
         </div>
+            </div>
+          </TabsContent>
+
+          {/* Service Operations Tab Content */}
+          <TabsContent value="operations">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="w-5 h-5" />
+                    Service Operations
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64 bg-muted/20 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <Settings className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Service operations view</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Operation performance, endpoints, and metrics
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Dependencies Tab Content */}
+          <TabsContent value="dependencies">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Database className="w-5 h-5" />
+                    Service Dependencies
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64 bg-muted/20 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <Database className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Dependencies analysis</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Upstream and downstream service dependencies
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Service Map Tab Content */}
+          <TabsContent value="service-map">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <GitBranch className="w-5 h-5" />
+                    Service Map
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64 bg-muted/20 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <GitBranch className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Service topology map</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Visual representation of service relationships
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Traces Tab Content */}
+          <TabsContent value="traces">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Search className="w-5 h-5" />
+                    Distributed Traces
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64 bg-muted/20 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Trace analysis</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Request traces and performance analysis
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

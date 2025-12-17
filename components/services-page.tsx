@@ -37,10 +37,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { InlineChart } from "@/components/ui/inline-chart"
-
-
-
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 import { services, getTopServicesByFaultRate, getTopDependenciesByFaultRate } from "@/lib/sample-data"
 
@@ -99,36 +103,34 @@ export function ServicesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2 px-3 font-medium text-muted-foreground text-sm">Service</th>
-                      <th className="text-right py-2 px-3 font-medium text-muted-foreground text-sm">Fault rate</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {topFaultServices.map((service) => (
-                      <tr key={service.name} className="border-b hover:bg-muted/5">
-                        <td className="py-2 px-3">
-                          <span className="text-sm text-foreground font-medium">{service.name}</span>
-                        </td>
-                        <td className="py-2 px-3">
-                          <div className="flex items-center justify-end gap-2">
-                            <span className="text-sm text-muted-foreground">{service.faultRate}</span>
-                            <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                              <div 
-                                className={`h-full ${service.color}`}
-                                style={{ width: service.faultRate }}
-                              />
-                            </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-left">Service</TableHead>
+                    <TableHead className="text-right">Fault rate</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {topFaultServices.map((service) => (
+                    <TableRow key={service.name}>
+                      <TableCell>
+                        <span className="text-sm text-foreground font-medium">{service.name}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-sm text-muted-foreground">{service.faultRate}</span>
+                          <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full ${service.color}`}
+                              style={{ width: service.faultRate }}
+                            />
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
 
@@ -141,40 +143,38 @@ export function ServicesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2 px-3 font-medium text-muted-foreground text-sm">Remote service</th>
-                      <th className="text-left py-2 px-3 font-medium text-muted-foreground text-sm">Service</th>
-                      <th className="text-right py-2 px-3 font-medium text-muted-foreground text-sm">Fault rate</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {topFaultDependencies.map((dep) => (
-                      <tr key={dep.name} className="border-b hover:bg-muted/5">
-                        <td className="py-2 px-3">
-                          <span className="text-sm text-foreground font-medium">{dep.name}</span>
-                        </td>
-                        <td className="py-2 px-3">
-                          <span className="text-sm text-muted-foreground">{dep.service}</span>
-                        </td>
-                        <td className="py-2 px-3">
-                          <div className="flex items-center justify-end gap-2">
-                            <span className="text-sm text-muted-foreground">{dep.faultRate}</span>
-                            <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                              <div 
-                                className={`h-full ${dep.color}`}
-                                style={{ width: dep.faultRate }}
-                              />
-                            </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-left">Remote service</TableHead>
+                    <TableHead className="text-left">Service</TableHead>
+                    <TableHead className="text-right">Fault rate</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {topFaultDependencies.map((dep) => (
+                    <TableRow key={dep.name}>
+                      <TableCell>
+                        <span className="text-sm text-foreground font-medium">{dep.name}</span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm text-muted-foreground">{dep.service}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-sm text-muted-foreground">{dep.faultRate}</span>
+                          <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full ${dep.color}`}
+                              style={{ width: dep.faultRate }}
+                            />
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </div>
@@ -201,26 +201,24 @@ export function ServicesPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Name</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Environment</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Hosted in</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Requests</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Errors</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Durations</th>
-                    <th className="w-12"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredServices.map((service) => (
-                    <ServiceRow key={service.name} service={service} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-left">Name</TableHead>
+                  <TableHead className="text-left">Environment</TableHead>
+                  <TableHead className="text-left">Hosted in</TableHead>
+                  <TableHead className="text-left">Requests</TableHead>
+                  <TableHead className="text-left">Errors</TableHead>
+                  <TableHead className="text-left">Durations</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredServices.map((service) => (
+                  <ServiceRow key={service.name} service={service} />
+                ))}
+              </TableBody>
+            </Table>
             
             {/* Pagination */}
             <div className="flex items-center justify-between mt-6 pt-4 border-t">
@@ -339,8 +337,8 @@ function ServiceRow({ service }: { service: typeof services[0] }) {
   }
 
   return (
-    <tr className="border-b hover:bg-muted/5">
-      <td className="py-3 px-4">
+    <TableRow>
+      <TableCell>
         <div className="flex items-center gap-2">
           <div 
             className="w-2 h-2 rounded-full"
@@ -357,14 +355,14 @@ function ServiceRow({ service }: { service: typeof services[0] }) {
             {service.name}
           </Link>
         </div>
-      </td>
-      <td className="py-3 px-4">
+      </TableCell>
+      <TableCell>
         <span className="text-muted-foreground">{service.environment}</span>
-      </td>
-      <td className="py-3 px-4">
+      </TableCell>
+      <TableCell>
         <span className="text-muted-foreground">{service.hostedIn}</span>
-      </td>
-      <td className="py-3 px-4">
+      </TableCell>
+      <TableCell>
         <div className="flex items-center gap-3">
           <span className="text-foreground font-medium">{convertToPerSecond(service.throughput)}</span>
           {service.requestsTimeSeries && (
@@ -375,8 +373,8 @@ function ServiceRow({ service }: { service: typeof services[0] }) {
             />
           )}
         </div>
-      </td>
-      <td className="py-3 px-4">
+      </TableCell>
+      <TableCell>
         <div className="flex items-center gap-3">
           <span className="text-foreground font-medium">{service.errorRate}</span>
           {service.errorsTimeSeries && (
@@ -387,8 +385,8 @@ function ServiceRow({ service }: { service: typeof services[0] }) {
             />
           )}
         </div>
-      </td>
-      <td className="py-3 px-4">
+      </TableCell>
+      <TableCell>
         <div className="flex items-center gap-3">
           <span className="text-foreground font-medium">{service.responseTime}</span>
           {service.durationsTimeSeries && (
@@ -399,8 +397,8 @@ function ServiceRow({ service }: { service: typeof services[0] }) {
             />
           )}
         </div>
-      </td>
-      <td className="py-3 px-4">
+      </TableCell>
+      <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
             <MoreHorizontal className="w-4 h-4" />
@@ -413,7 +411,7 @@ function ServiceRow({ service }: { service: typeof services[0] }) {
             <DropdownMenuItem>Configure Alerts</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   )
 }
