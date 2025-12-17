@@ -45,15 +45,164 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { DataTable, SortableHeader } from "@/components/ui/data-table"
+import { ColumnDef } from "@tanstack/react-table"
 
-import { services, getTopServicesByFaultRate, getTopDependenciesByFaultRate } from "@/lib/sample-data"
+import { services, getTopServicesByFaultRate, getTopDependenciesByFaultRate, Service } from "@/lib/sample-data"
+
+// Convert throughput from per minute to per second
+const convertToPerSecond = (throughput: string) => {
+  const match = throughput.match(/^([\d,]+(?:\.\d+)?)(\/min|k\/min)$/)
+  if (!match) return throughput
+  
+  const [, value, unit] = match
+  const numValue = parseFloat(value.replace(',', ''))
+  
+  if (unit === 'k/min') {
+    const perSecond = (numValue * 1000) / 60
+    return perSecond >= 1000 ? `${(perSecond / 1000).toFixed(1)}k/s` : `${Math.round(perSecond)}/s`
+  } else {
+    const perSecond = numValue / 60
+    return perSecond >= 1000 ? `${(perSecond / 1000).toFixed(1)}k/s` : `${Math.round(perSecond)}/s`
+  }
+}
+
+// Column definitions for the services table
+const columns: ColumnDef<Service>[] = [
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Name</SortableHeader>
+    ),
+    cell: ({ row }) => {
+      const service = row.original
+      return (
+        <div className="flex items-center gap-2">
+          <div 
+            className="w-2 h-2 rounded-full"
+            style={{ 
+              backgroundColor: service.status === 'healthy' ? 'rgb(34 197 94)' : 
+                              service.status === 'warning' ? 'rgb(234 179 8)' : 
+                              'rgb(239 68 68)' 
+            }}
+          />
+          <Link 
+            href={`/services/${service.name}`}
+            className="font-medium text-primary hover:text-primary/80 underline underline-offset-2 hover:underline-offset-4 transition-all cursor-pointer"
+          >
+            {service.name}
+          </Link>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "environment",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Environment</SortableHeader>
+    ),
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">{row.getValue("environment")}</span>
+    ),
+  },
+  {
+    accessorKey: "hostedIn",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Hosted in</SortableHeader>
+    ),
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">{row.getValue("hostedIn")}</span>
+    ),
+  },
+  {
+    accessorKey: "throughput",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Requests</SortableHeader>
+    ),
+    cell: ({ row }) => {
+      const service = row.original
+      return (
+        <div className="flex items-center gap-3">
+          <span className="text-foreground font-medium">
+            {convertToPerSecond(service.throughput)}
+          </span>
+          {service.requestsTimeSeries && (
+            <InlineChart 
+              data={service.requestsTimeSeries} 
+              width={60} 
+              height={20}
+            />
+          )}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "errorRate",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Errors</SortableHeader>
+    ),
+    cell: ({ row }) => {
+      const service = row.original
+      return (
+        <div className="flex items-center gap-3">
+          <span className="text-foreground font-medium">{service.errorRate}</span>
+          {service.errorsTimeSeries && (
+            <InlineChart 
+              data={service.errorsTimeSeries} 
+              width={60} 
+              height={20}
+            />
+          )}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "responseTime",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Durations</SortableHeader>
+    ),
+    cell: ({ row }) => {
+      const service = row.original
+      return (
+        <div className="flex items-center gap-3">
+          <span className="text-foreground font-medium">{service.responseTime}</span>
+          {service.durationsTimeSeries && (
+            <InlineChart 
+              data={service.durationsTimeSeries} 
+              width={60} 
+              height={20}
+            />
+          )}
+        </div>
+      )
+    },
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const service = row.original
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
+            <MoreHorizontal className="w-4 h-4" />
+            <span className="sr-only">More options</span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <DropdownMenuItem>Edit Service</DropdownMenuItem>
+            <DropdownMenuItem>View Logs</DropdownMenuItem>
+            <DropdownMenuItem>Configure Alerts</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+  },
+]
 
 export function ServicesPage() {
-  const [searchTerm, setSearchTerm] = React.useState("")
-
-  const filteredServices = services.filter(service =>
-    service.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
 
   const topFaultServices = getTopServicesByFaultRate(5)
   const topFaultDependencies = getTopDependenciesByFaultRate(5)
@@ -182,59 +331,18 @@ export function ServicesPage() {
         {/* Services List */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Server className="w-5 h-5" />
-                Services ({filteredServices.length})
-              </CardTitle>
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search all filters"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 w-64"
-                  />
-                </div>
-              </div>
-            </div>
+            <CardTitle className="flex items-center gap-2">
+              <Server className="w-5 h-5" />
+              Services ({services.length})
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-left">Name</TableHead>
-                  <TableHead className="text-left">Environment</TableHead>
-                  <TableHead className="text-left">Hosted in</TableHead>
-                  <TableHead className="text-left">Requests</TableHead>
-                  <TableHead className="text-left">Errors</TableHead>
-                  <TableHead className="text-left">Durations</TableHead>
-                  <TableHead className="w-12"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredServices.map((service) => (
-                  <ServiceRow key={service.name} service={service} />
-                ))}
-              </TableBody>
-            </Table>
-            
-            {/* Pagination */}
-            <div className="flex items-center justify-between mt-6 pt-4 border-t">
-              <p className="text-sm text-muted-foreground">
-                Rows per page: 10
-              </p>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" disabled>
-                  Previous
-                </Button>
-                <span className="text-sm text-muted-foreground">1 of 1</span>
-                <Button variant="outline" size="sm" disabled>
-                  Next
-                </Button>
-              </div>
-            </div>
+            <DataTable 
+              columns={columns} 
+              data={services} 
+              searchKey="name"
+              searchPlaceholder="Search services..."
+            />
           </CardContent>
         </Card>
 
@@ -315,103 +423,5 @@ export function ServicesPage() {
         </Card>
       </div>
     </div>
-  )
-}
-
-function ServiceRow({ service }: { service: typeof services[0] }) {
-  // Convert throughput from per minute to per second
-  const convertToPerSecond = (throughput: string) => {
-    const match = throughput.match(/^([\d,]+(?:\.\d+)?)(\/min|k\/min)$/)
-    if (!match) return throughput
-    
-    const [, value, unit] = match
-    const numValue = parseFloat(value.replace(',', ''))
-    
-    if (unit === 'k/min') {
-      const perSecond = (numValue * 1000) / 60
-      return perSecond >= 1000 ? `${(perSecond / 1000).toFixed(1)}k/s` : `${Math.round(perSecond)}/s`
-    } else {
-      const perSecond = numValue / 60
-      return perSecond >= 1000 ? `${(perSecond / 1000).toFixed(1)}k/s` : `${Math.round(perSecond)}/s`
-    }
-  }
-
-  return (
-    <TableRow>
-      <TableCell>
-        <div className="flex items-center gap-2">
-          <div 
-            className="w-2 h-2 rounded-full"
-            style={{ 
-              backgroundColor: service.status === 'healthy' ? 'rgb(34 197 94)' : 
-                              service.status === 'warning' ? 'rgb(234 179 8)' : 
-                              'rgb(239 68 68)' 
-            }}
-          />
-          <Link 
-            href={`/services/${service.name}`}
-            className="font-medium text-primary hover:text-primary/80 underline underline-offset-2 hover:underline-offset-4 transition-all cursor-pointer"
-          >
-            {service.name}
-          </Link>
-        </div>
-      </TableCell>
-      <TableCell>
-        <span className="text-muted-foreground">{service.environment}</span>
-      </TableCell>
-      <TableCell>
-        <span className="text-muted-foreground">{service.hostedIn}</span>
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-3">
-          <span className="text-foreground font-medium">{convertToPerSecond(service.throughput)}</span>
-          {service.requestsTimeSeries && (
-            <InlineChart 
-              data={service.requestsTimeSeries} 
-              width={60} 
-              height={20}
-            />
-          )}
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-3">
-          <span className="text-foreground font-medium">{service.errorRate}</span>
-          {service.errorsTimeSeries && (
-            <InlineChart 
-              data={service.errorsTimeSeries} 
-              width={60} 
-              height={20}
-            />
-          )}
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-3">
-          <span className="text-foreground font-medium">{service.responseTime}</span>
-          {service.durationsTimeSeries && (
-            <InlineChart 
-              data={service.durationsTimeSeries} 
-              width={60} 
-              height={20}
-            />
-          )}
-        </div>
-      </TableCell>
-      <TableCell>
-        <DropdownMenu>
-          <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
-            <MoreHorizontal className="w-4 h-4" />
-            <span className="sr-only">More options</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>View Details</DropdownMenuItem>
-            <DropdownMenuItem>Edit Service</DropdownMenuItem>
-            <DropdownMenuItem>View Logs</DropdownMenuItem>
-            <DropdownMenuItem>Configure Alerts</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </TableCell>
-    </TableRow>
   )
 }
