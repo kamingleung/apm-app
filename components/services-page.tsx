@@ -36,6 +36,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { InlineChart } from "@/components/ui/inline-chart"
 
 
 
@@ -364,13 +365,40 @@ function ServiceRow({ service }: { service: typeof services[0] }) {
         <span className="text-muted-foreground">{service.hostedIn}</span>
       </td>
       <td className="py-3 px-4">
-        <span className="text-foreground font-medium">{convertToPerSecond(service.throughput)}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-foreground font-medium">{convertToPerSecond(service.throughput)}</span>
+          {service.requestsTimeSeries && (
+            <InlineChart 
+              data={service.requestsTimeSeries} 
+              width={60} 
+              height={20}
+            />
+          )}
+        </div>
       </td>
       <td className="py-3 px-4">
-        <span className="text-foreground font-medium">{service.errorRate}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-foreground font-medium">{service.errorRate}</span>
+          {service.errorsTimeSeries && (
+            <InlineChart 
+              data={service.errorsTimeSeries} 
+              width={60} 
+              height={20}
+            />
+          )}
+        </div>
       </td>
       <td className="py-3 px-4">
-        <span className="text-foreground font-medium">{service.responseTime}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-foreground font-medium">{service.responseTime}</span>
+          {service.durationsTimeSeries && (
+            <InlineChart 
+              data={service.durationsTimeSeries} 
+              width={60} 
+              height={20}
+            />
+          )}
+        </div>
       </td>
       <td className="py-3 px-4">
         <DropdownMenu>

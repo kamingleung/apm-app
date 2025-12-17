@@ -14,6 +14,9 @@ export interface Service {
   hostedIn: string
   lastDeployed: string
   requests: string
+  requestsTimeSeries?: number[]
+  errorsTimeSeries?: number[]
+  durationsTimeSeries?: number[]
 }
 
 export interface Metric {
@@ -90,7 +93,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "AWS ECS",
     lastDeployed: "2 hours ago",
-    requests: "234/min"
+    requests: "234/min",
+    requestsTimeSeries: [180, 220, 190, 240, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50],
+    errorsTimeSeries: [15, 18, 22, 28, 35, 40, 45, 50, 55, 60, 58, 52, 48, 45, 60],
+    durationsTimeSeries: [800, 900, 1000, 1100, 1200, 1300, 1250, 1200, 1150, 1100, 1050, 1000, 950, 900, 1200]
   },
   {
     id: "user-service",
@@ -106,7 +112,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "Kubernetes cluster on AWS",
     lastDeployed: "1 day ago",
-    requests: "847/min"
+    requests: "847/min",
+    requestsTimeSeries: [700, 720, 750, 780, 800, 820, 840, 860, 850, 870, 880, 860, 850, 840, 847],
+    errorsTimeSeries: [1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1],
+    durationsTimeSeries: [140, 145, 150, 155, 160, 158, 156, 154, 152, 150, 148, 150, 152, 154, 156]
   },
   {
     id: "notification-service",
@@ -122,7 +131,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "ECS Auto Scaling group on AWS",
     lastDeployed: "6 hours ago",
-    requests: "1.2k/min"
+    requests: "1.2k/min",
+    requestsTimeSeries: [1100, 1150, 1200, 1250, 1300, 1280, 1220, 1180, 1150, 1100, 1050, 1000, 950, 900, 1200],
+    errorsTimeSeries: [8, 10, 12, 15, 18, 20, 22, 18, 15, 12, 10, 8, 6, 8, 15],
+    durationsTimeSeries: [280, 290, 300, 310, 320, 315, 312, 310, 308, 305, 300, 295, 290, 300, 312]
   },
   {
     id: "analytics-service",
@@ -138,7 +150,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "AWS ECS",
     lastDeployed: "3 hours ago",
-    requests: "45/min"
+    requests: "45/min",
+    requestsTimeSeries: [80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 45],
+    errorsTimeSeries: [35, 40, 45, 50, 55, 60, 58, 55, 52, 48, 45, 42, 40, 38, 55],
+    durationsTimeSeries: [1800, 1900, 2000, 2100, 2200, 2150, 2100, 2050, 2000, 1950, 1900, 1850, 1800, 1900, 2100]
   },
   {
     id: "auth-service",
@@ -154,7 +169,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "Serverless",
     lastDeployed: "5 days ago",
-    requests: "2.1k/min"
+    requests: "2.1k/min",
+    requestsTimeSeries: [1800, 1900, 2000, 2100, 2200, 2150, 2100, 2050, 2000, 1950, 2000, 2050, 2100, 2150, 2100],
+    errorsTimeSeries: [2, 1, 2, 1, 3, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2],
+    durationsTimeSeries: [85, 87, 89, 91, 93, 92, 90, 88, 86, 84, 85, 87, 89, 90, 89]
   },
   {
     id: "search-service",
@@ -170,7 +188,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "ECS Cluster with EC2 auto-scaling",
     lastDeployed: "2 days ago",
-    requests: "567/min"
+    requests: "567/min",
+    requestsTimeSeries: [500, 520, 540, 560, 580, 570, 565, 560, 555, 550, 545, 550, 560, 565, 567],
+    errorsTimeSeries: [5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 5, 6, 7, 8, 7],
+    durationsTimeSeries: [230, 235, 240, 245, 250, 248, 245, 243, 240, 238, 235, 240, 243, 245, 245]
   },
   {
     id: "inventory-service",
@@ -186,7 +207,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "Serverless",
     lastDeployed: "4 hours ago",
-    requests: "123/min"
+    requests: "123/min",
+    requestsTimeSeries: [150, 140, 135, 130, 125, 120, 115, 110, 105, 100, 95, 100, 110, 120, 123],
+    errorsTimeSeries: [12, 14, 16, 18, 15, 13, 11, 9, 8, 10, 12, 14, 16, 15, 13],
+    durationsTimeSeries: [620, 640, 660, 680, 700, 690, 678, 670, 665, 660, 650, 655, 665, 670, 678]
   },
   {
     id: "recommendation-service",
@@ -202,7 +226,10 @@ export const services: Service[] = [
     environment: "production",
     hostedIn: "Lambda functions on AWS",
     lastDeployed: "1 day ago",
-    requests: "289/min"
+    requests: "289/min",
+    requestsTimeSeries: [250, 260, 270, 280, 290, 295, 300, 295, 290, 285, 280, 275, 280, 285, 289],
+    errorsTimeSeries: [8, 9, 10, 11, 12, 11, 10, 9, 8, 7, 8, 9, 10, 11, 10],
+    durationsTimeSeries: [400, 410, 420, 430, 440, 435, 423, 420, 418, 415, 410, 415, 420, 425, 423]
   }
 ]
 
