@@ -74,6 +74,8 @@ const columns: ColumnDef<Service>[] = [
     header: ({ column }) => (
       <SortableHeader column={column}>Name</SortableHeader>
     ),
+    size: 250,
+    minSize: 180,
     cell: ({ row }) => {
       const service = row.original
       return (
@@ -101,6 +103,8 @@ const columns: ColumnDef<Service>[] = [
     header: ({ column }) => (
       <SortableHeader column={column}>Environment</SortableHeader>
     ),
+    size: 140,
+    minSize: 110,
     cell: ({ row }) => (
       <span className="text-muted-foreground">{row.getValue("environment")}</span>
     ),
@@ -110,6 +114,8 @@ const columns: ColumnDef<Service>[] = [
     header: ({ column }) => (
       <SortableHeader column={column}>Hosted in</SortableHeader>
     ),
+    size: 220,
+    minSize: 160,
     cell: ({ row }) => (
       <span className="text-muted-foreground">{row.getValue("hostedIn")}</span>
     ),
@@ -119,6 +125,8 @@ const columns: ColumnDef<Service>[] = [
     header: ({ column }) => (
       <SortableHeader column={column}>Requests</SortableHeader>
     ),
+    size: 180,
+    minSize: 140,
     cell: ({ row }) => {
       const service = row.original
       return (
@@ -142,6 +150,8 @@ const columns: ColumnDef<Service>[] = [
     header: ({ column }) => (
       <SortableHeader column={column}>Errors</SortableHeader>
     ),
+    size: 160,
+    minSize: 120,
     cell: ({ row }) => {
       const service = row.original
       return (
@@ -163,6 +173,8 @@ const columns: ColumnDef<Service>[] = [
     header: ({ column }) => (
       <SortableHeader column={column}>Durations</SortableHeader>
     ),
+    size: 170,
+    minSize: 130,
     cell: ({ row }) => {
       const service = row.original
       return (
@@ -182,6 +194,8 @@ const columns: ColumnDef<Service>[] = [
   {
     id: "actions",
     enableHiding: false,
+    enableResizing: false,
+    size: 80,
     cell: ({ row }) => {
       const service = row.original
       return (
