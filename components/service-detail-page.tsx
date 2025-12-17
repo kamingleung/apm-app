@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import { 
-  ArrowLeft,
   Activity, 
   AlertTriangle, 
   CheckCircle, 
@@ -16,18 +15,15 @@ import {
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -138,15 +134,15 @@ export function ServiceDetailPage({ serviceName }: ServiceDetailPageProps) {
             <Breadcrumb className="mb-2">
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="/">APM</Link>
-                  </BreadcrumbLink>
+                  <Link href="/" className="transition-colors hover:text-foreground">
+                    APM
+                  </Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="/services">Services</Link>
-                  </BreadcrumbLink>
+                  <Link href="/services" className="transition-colors hover:text-foreground">
+                    Services
+                  </Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>

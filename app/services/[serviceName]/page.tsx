@@ -1,11 +1,12 @@
 import { ServiceDetailPage } from "@/components/service-detail-page";
 
 interface ServiceDetailProps {
-  params: {
+  params: Promise<{
     serviceName: string;
-  };
+  }>;
 }
 
-export default function ServiceDetail({ params }: ServiceDetailProps) {
-  return <ServiceDetailPage serviceName={params.serviceName} />;
+export default async function ServiceDetail({ params }: ServiceDetailProps) {
+  const { serviceName } = await params;
+  return <ServiceDetailPage serviceName={serviceName} />;
 }

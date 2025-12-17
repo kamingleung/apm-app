@@ -6,12 +6,9 @@ import {
   AlertTriangle, 
   CheckCircle, 
   Clock, 
-  Database, 
   Globe, 
   Server, 
   TrendingUp, 
-  Users, 
-  Zap,
   BarChart3,
   Eye,
   AlertCircle

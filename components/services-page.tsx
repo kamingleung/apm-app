@@ -4,7 +4,6 @@ import * as React from "react"
 import Link from "next/link"
 import { 
   AlertTriangle, 
-  CheckCircle, 
   Clock, 
   Database, 
   Server, 
@@ -15,12 +14,11 @@ import {
   BarChart3
 } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -34,104 +32,26 @@ import {
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-// Mock data for services with highest fault rates
-const topFaultServices = [
-  { name: "payment-service", faultRate: "100%", color: "bg-destructive" },
-  { name: "notification-service", faultRate: "53.41%", color: "bg-destructive" },
-  { name: "user-service", faultRate: "32.16%", color: "bg-warning" },
-  { name: "analytics-service", faultRate: "30.84%", color: "bg-warning" },
-  { name: "auth-service", faultRate: "25.47%", color: "bg-warning" },
-]
 
-// Mock data for dependencies with highest fault rates
-const topFaultDependencies = [
-  { name: "redis-cache", service: "customer-service", faultRate: "100%", color: "bg-destructive" },
-  { name: "postgres-db", service: "payment-service", faultRate: "50%", color: "bg-destructive" },
-  { name: "elasticsearch", service: "search-service", faultRate: "44.12%", color: "bg-warning" },
-  { name: "mongodb", service: "analytics-service", faultRate: "43.68%", color: "bg-warning" },
-  { name: "rabbitmq", service: "notification-service", faultRate: "41.23%", color: "bg-warning" },
-]
 
-// Mock data for all services
-const allServices = [
-  {
-    name: "payment-service",
-    sliStatus: "Not Compatible",
-    availability: "74.4%",
-    application: "-",
-    hostedIn: "AWS ECS",
-    status: "critical"
-  },
-  {
-    name: "user-service", 
-    sliStatus: "Create SLO",
-    availability: "99.9%",
-    application: "-",
-    hostedIn: "Kubernetes cluster on AWS",
-    status: "healthy"
-  },
-  {
-    name: "notification-service",
-    sliStatus: "Create SLO", 
-    availability: "87.3%",
-    application: "NotificationApp",
-    hostedIn: "ECS Auto Scaling group on AWS",
-    status: "warning"
-  },
-  {
-    name: "analytics-service",
-    sliStatus: "Create SLO",
-    availability: "100%",
-    application: "-", 
-    hostedIn: "AWS ECS",
-    status: "healthy"
-  },
-  {
-    name: "auth-service",
-    sliStatus: "Healthy",
-    availability: "100%",
-    application: "-",
-    hostedIn: "Serverless",
-    status: "healthy"
-  },
-  {
-    name: "search-service",
-    sliStatus: "Create SLO",
-    availability: "100%",
-    application: "NotificationApp",
-    hostedIn: "ECS Cluster with EC2 auto-scaling",
-    status: "healthy"
-  },
-  {
-    name: "inventory-service",
-    sliStatus: "Create SLO", 
-    availability: "89.2%",
-    application: "-",
-    hostedIn: "Serverless",
-    status: "warning"
-  },
-  {
-    name: "recommendation-service",
-    sliStatus: "Create SLO",
-    availability: "100%",
-    application: "-",
-    hostedIn: "Lambda functions on AWS",
-    status: "healthy"
-  }
-]
+
+
+import { services, getTopServicesByFaultRate, getTopDependenciesByFaultRate } from "@/lib/sample-data"
 
 export function ServicesPage() {
   const [searchTerm, setSearchTerm] = React.useState("")
 
-  const filteredServices = allServices.filter(service =>
+  const filteredServices = services.filter(service =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const topFaultServices = getTopServicesByFaultRate(5)
+  const topFaultDependencies = getTopDependenciesByFaultRate(5)
 
   return (
     <div className="@container min-h-screen bg-background">
@@ -142,9 +62,9 @@ export function ServicesPage() {
             <Breadcrumb className="mb-2">
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="/">APM</Link>
-                  </BreadcrumbLink>
+                  <Link href="/" className="transition-colors hover:text-foreground">
+                    APM
+                  </Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
@@ -285,15 +205,16 @@ export function ServicesPage() {
                 <thead>
                   <tr className="border-b">
                     <th className="text-left py-3 px-4 font-medium text-muted-foreground">Name</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">SLI status</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Service Availability</th>
-                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Application</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Environment</th>
                     <th className="text-left py-3 px-4 font-medium text-muted-foreground">Hosted in</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Requests</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Errors</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Durations</th>
                     <th className="w-12"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredServices.map((service, index) => (
+                  {filteredServices.map((service) => (
                     <ServiceRow key={service.name} service={service} />
                   ))}
                 </tbody>
@@ -398,30 +319,21 @@ export function ServicesPage() {
   )
 }
 
-function ServiceRow({ service }: { service: typeof allServices[0] }) {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "healthy":
-        return "bg-success/10 text-success border-success/20"
-      case "warning":
-        return "bg-warning/10 text-warning border-warning/20"
-      case "critical":
-        return "bg-destructive/10 text-destructive border-destructive/20"
-      default:
-        return "bg-muted/10 text-muted-foreground border-muted/20"
-    }
-  }
-
-  const getSLIBadge = (sliStatus: string) => {
-    switch (sliStatus) {
-      case "Healthy":
-        return "bg-success/10 text-success border-success/20"
-      case "Create SLO":
-        return "bg-info/10 text-info border-info/20"
-      case "Not Compatible":
-        return "bg-destructive/10 text-destructive border-destructive/20"
-      default:
-        return "bg-muted/10 text-muted-foreground border-muted/20"
+function ServiceRow({ service }: { service: typeof services[0] }) {
+  // Convert throughput from per minute to per second
+  const convertToPerSecond = (throughput: string) => {
+    const match = throughput.match(/^([\d,]+(?:\.\d+)?)(\/min|k\/min)$/)
+    if (!match) return throughput
+    
+    const [, value, unit] = match
+    const numValue = parseFloat(value.replace(',', ''))
+    
+    if (unit === 'k/min') {
+      const perSecond = (numValue * 1000) / 60
+      return perSecond >= 1000 ? `${(perSecond / 1000).toFixed(1)}k/s` : `${Math.round(perSecond)}/s`
+    } else {
+      const perSecond = numValue / 60
+      return perSecond >= 1000 ? `${(perSecond / 1000).toFixed(1)}k/s` : `${Math.round(perSecond)}/s`
     }
   }
 
@@ -446,18 +358,19 @@ function ServiceRow({ service }: { service: typeof allServices[0] }) {
         </div>
       </td>
       <td className="py-3 px-4">
-        <Badge className={getSLIBadge(service.sliStatus)}>
-          {service.sliStatus}
-        </Badge>
-      </td>
-      <td className="py-3 px-4">
-        <span className="text-foreground">{service.availability}</span>
-      </td>
-      <td className="py-3 px-4">
-        <span className="text-muted-foreground">{service.application}</span>
+        <span className="text-muted-foreground">{service.environment}</span>
       </td>
       <td className="py-3 px-4">
         <span className="text-muted-foreground">{service.hostedIn}</span>
+      </td>
+      <td className="py-3 px-4">
+        <span className="text-foreground font-medium">{convertToPerSecond(service.throughput)}</span>
+      </td>
+      <td className="py-3 px-4">
+        <span className="text-foreground font-medium">{service.errorRate}</span>
+      </td>
+      <td className="py-3 px-4">
+        <span className="text-foreground font-medium">{service.responseTime}</span>
       </td>
       <td className="py-3 px-4">
         <DropdownMenu>
