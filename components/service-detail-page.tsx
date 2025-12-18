@@ -32,6 +32,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { TracesTab } from "@/components/traces-tab"
 
 interface ServiceDetailPageProps {
   serviceName: string
@@ -453,22 +454,8 @@ export function ServiceDetailPage({ serviceName }: ServiceDetailPageProps) {
           <TabsContent value="traces">
             <div className="space-y-6">
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Search className="w-5 h-5" />
-                    Distributed Traces
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 bg-muted/20 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-muted-foreground">Trace analysis</p>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        Request traces and performance analysis
-                      </p>
-                    </div>
-                  </div>
+                <CardContent className="h-[calc(100vh-224px)] p-0">
+                  <TracesTab />
                 </CardContent>
               </Card>
             </div>
