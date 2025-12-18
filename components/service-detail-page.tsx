@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import Link from "next/link"
 import { 
   Activity, 
@@ -12,9 +11,7 @@ import {
   BarChart3,
   Zap,
   Database,
-  Settings,
-  GitBranch,
-  Search
+  Settings
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -33,6 +30,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TracesTab } from "@/components/traces-tab"
+import { ServiceMap } from "@/components/service-map"
 
 interface ServiceDetailPageProps {
   serviceName: string
@@ -300,14 +298,14 @@ export function ServiceDetailPage({ serviceName }: ServiceDetailPageProps) {
           </Card>
         </div>
 
-        {/* Recent Events and Dependencies */}
+        {/* Insights and Dependencies */}
         <div className="grid grid-cols-1 @lg:grid-cols-2 gap-6">
-          {/* Recent Events */}
+          {/* Insights */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="w-5 h-5" />
-                Recent Events
+                Insights
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -429,22 +427,8 @@ export function ServiceDetailPage({ serviceName }: ServiceDetailPageProps) {
           <TabsContent value="service-map">
             <div className="space-y-6">
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <GitBranch className="w-5 h-5" />
-                    Service Map
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 bg-muted/20 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <GitBranch className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-muted-foreground">Service topology map</p>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        Visual representation of service relationships
-                      </p>
-                    </div>
-                  </div>
+                <CardContent className="h-[calc(100vh-224px)] p-0">
+                  <ServiceMap serviceName={serviceName} />
                 </CardContent>
               </Card>
             </div>

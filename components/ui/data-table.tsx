@@ -92,16 +92,49 @@ export function DataTable<TData, TValue>({
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
+                // Get the column header text - handle both string and component headers
+                const getColumnDisplayName = (column: any) => {
+                  const headerDef = column.columnDef.header
+                  
+                  // If header is a string, use it directly
+                  if (typeof headerDef === 'string') {
+                    return headerDef
+                  }
+                  
+                  // If header is a function/component, try to extract text from it
+                  if (typeof headerDef === 'function') {
+                    // For SortableHeader components, we need to look at the children
+                    // This is a bit of a hack, but works for our current structure
+                    const headerElement = headerDef({ column })
+                    
+                    // If it's a React element with children (like SortableHeader)
+                    if (headerElement?.props?.children) {
+                      const children = headerElement.props.children
+                      // Return the first string child (the actual header text)
+                      if (Array.isArray(children)) {
+                        return children.find(child => typeof child === 'string') || column.id
+                      }
+                      if (typeof children === 'string') {
+                        return children
+                      }
+                    }
+                  }
+                  
+                  // Fallback to column.id with proper formatting
+                  return column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/([A-Z])/g, ' $1')
+                }
+
+                const displayName = getColumnDisplayName(column)
+                
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {displayName}
                   </DropdownMenuCheckboxItem>
                 )
               })}
