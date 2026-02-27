@@ -59,30 +59,44 @@ const mockAlerts = [
   { 
     id: 1, 
     severity: "High", 
-    title: "frontend-proxy latency spiked",
-    message: "Latency spike of Payment service in pet-clinic-frontend-java correlates with database query execution time increase.",
+    title: "Payment Service database timeout",
+    message: "Database connection pool exhausted. Multiple queries timing out after 30s. Immediate attention required.",
     time: "2 min ago" 
   },
   { 
     id: 2, 
     severity: "High", 
-    title: "frontend-proxy latency spiked",
-    message: "Latency spike of Payment service in pet-clinic-frontend-java correlates with database query execution time increase.",
+    title: "API Gateway rate limit exceeded",
+    message: "Rate limiting triggered for /api/checkout endpoint. 429 responses increased by 340% in the last 10 minutes.",
     time: "15 min ago" 
   },
   { 
     id: 3, 
     severity: "High", 
-    title: "frontend-proxy latency spiked",
-    message: "Latency spike of Payment service in pet-clinic-frontend-java correlates with database query execution time increase.",
+    title: "User Service authentication failures",
+    message: "JWT validation errors spiked to 15% of requests. Token expiration or signing key mismatch detected.",
     time: "1 hour ago" 
   },
   { 
     id: 4, 
-    severity: "High", 
-    title: "frontend-proxy latency spiked",
-    message: "Latency spike of Payment service in pet-clinic-frontend-java correlates with database query execution time increase.",
+    severity: "Medium", 
+    title: "Notification Service queue backlog",
+    message: "Message queue depth increased to 10k+ messages. Processing rate is slower than ingestion rate.",
     time: "3 hours ago" 
+  },
+  { 
+    id: 5, 
+    severity: "Medium", 
+    title: "Analytics Service memory usage high",
+    message: "Memory consumption exceeded 85% threshold. Consider scaling horizontally or optimizing data aggregation.",
+    time: "5 hours ago" 
+  },
+  { 
+    id: 6, 
+    severity: "Medium", 
+    title: "Cache Service hit rate degraded",
+    message: "Redis cache hit rate dropped from 92% to 67%. Possible cache eviction or key expiration issues.",
+    time: "6 hours ago" 
   },
 ]
 
@@ -185,30 +199,32 @@ export function APMDashboard() {
                 <h2 className="text-xl font-semibold mb-4 text-foreground">14 related alerts</h2>
                 <p className="text-sm text-muted-foreground mb-4">4 High 5 Medium</p>
                 
-                <div className="grid grid-cols-1 @md:grid-cols-2 @xl:grid-cols-4 gap-4">
-                  {mockAlerts.map((alert) => (
-                    <Card key={alert.id} className="bg-card border">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-base font-semibold">
-                            {alert.title}
-                          </CardTitle>
-                          <Badge className="bg-destructive text-destructive-foreground">
-                            {alert.severity}
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground mb-3">
-                          {alert.message}
-                        </p>
-                        <Button variant="link" className="p-0 h-auto text-primary">
-                          View more
-                          <ArrowUpRight className="w-3 h-3 ml-1" />
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="overflow-x-auto -mx-6 px-6">
+                  <div className="flex gap-4 pb-4">
+                    {mockAlerts.map((alert) => (
+                      <Card key={alert.id} className="bg-card border flex-shrink-0 w-[320px]">
+                        <CardHeader className="pb-1">
+                          <div className="flex items-start justify-between">
+                            <CardTitle className="text-base font-semibold">
+                              {alert.title}
+                            </CardTitle>
+                            <Badge className="bg-destructive text-destructive-foreground">
+                              {alert.severity}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pt-1">
+                          <p className="text-sm text-muted-foreground mb-3">
+                            {alert.message}
+                          </p>
+                          <Button variant="link" className="p-0 h-auto text-primary">
+                            View more
+                            <ArrowUpRight className="w-3 h-3 ml-1" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
               </section>
 
