@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { 
   BarChart3, 
@@ -46,6 +47,12 @@ const navigationItems = [
     href: "/traces",
     icon: Activity,
     description: "Distributed tracing and performance"
+  },
+  {
+    title: "Configuration",
+    href: "/configuration",
+    icon: Settings,
+    description: "APM data source configuration"
   }
 ]
 
@@ -65,11 +72,6 @@ const bottomNavigationItems = [
     title: "Help",
     href: "/help",
     icon: HelpCircle
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings
   }
 ]
 
@@ -91,12 +93,16 @@ export function Sidebar({ className }: SidebarProps) {
       <div className="flex items-center justify-between p-4 border-b">
         {!isCollapsed && (
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Activity className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <Image 
+              src="/opensearch_mark_on_light.svg" 
+              alt="OpenSearch" 
+              width={32} 
+              height={32}
+              className="flex-shrink-0"
+            />
             <div>
-              <h2 className="font-semibold text-foreground">APM Monitor</h2>
-              <p className="text-xs text-muted-foreground">Performance Hub</p>
+              <h2 className="font-semibold text-foreground">OpenSearch</h2>
+              <p className="text-xs text-muted-foreground">Observability</p>
             </div>
           </div>
         )}

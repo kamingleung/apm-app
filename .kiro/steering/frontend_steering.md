@@ -15,3 +15,4 @@ inclusion: always
 ### ⚠️ CRITICAL RULES
 1. **Install shadcn components to the project if they are not found in the project**
 2. **shadcn generates code**
+3. Use echarts for any visualizations

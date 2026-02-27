@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "APM Dashboard - Application Performance Monitoring",
-  description: "Real-time application performance monitoring and observability platform",
+  title: "OpenSearch - Application Performance Monitoring",
+  description: "Real-time application performance monitoring and observability platform powered by OpenSearch",
 };
 
 export default function RootLayout({

@@ -10,12 +10,10 @@ import {
   Server, 
   TrendingUp, 
   BarChart3,
-  Eye,
   AlertCircle
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -30,6 +28,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 // Mock data for the dashboard
 const mockMetrics = {
@@ -54,6 +59,8 @@ const mockAlerts = [
 ]
 
 export function APMDashboard() {
+  const [timeRange, setTimeRange] = React.useState("15m")
+
   return (
     <div className="@container min-h-screen bg-background p-6">
       <div className="mx-auto max-w-7xl space-y-6">
@@ -71,7 +78,7 @@ export function APMDashboard() {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <h1 className="text-3xl font-bold text-foreground">APM Dashboard</h1>
+            <h1 className="text-3xl font-bold text-foreground">Observability overview</h1>
             <p className="text-muted-foreground">
               Monitor your application performance in real-time
             </p>
@@ -81,10 +88,21 @@ export function APMDashboard() {
               <CheckCircle className="w-3 h-3 mr-1" />
               All Systems Operational
             </Badge>
-            <Button variant="outline" size="sm">
-              <Eye className="w-4 h-4 mr-2" />
-              View Details
-            </Button>
+            <Select value={timeRange} onValueChange={setTimeRange}>
+              <SelectTrigger className="w-[180px]">
+                <Clock className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Select time range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5m">Last 5 minutes</SelectItem>
+                <SelectItem value="15m">Last 15 minutes</SelectItem>
+                <SelectItem value="1h">Last hour</SelectItem>
+                <SelectItem value="6h">Last 6 hours</SelectItem>
+                <SelectItem value="24h">Last 24 hours</SelectItem>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </header>
 
