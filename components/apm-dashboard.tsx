@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { AlertDetailsModal } from "@/components/alert-details-modal"
 
 // Mock data for the dashboard
 const mockMetrics = {
@@ -125,13 +126,15 @@ const topDependencyPaths = [
 export function APMDashboard() {
   const [timeRange, setTimeRange] = React.useState("15m")
   const [searchQuery, setSearchQuery] = React.useState("")
+  const [alertModalOpen, setAlertModalOpen] = React.useState(false)
+  const [selectedAlertId, setSelectedAlertId] = React.useState<number | undefined>()
 
   return (
     <div 
       className="@container min-h-screen bg-cover bg-center bg-no-repeat" 
-      style={{ backgroundImage: "url('/landing_bg.png')", backgroundSize: 'cover', backgroundAttachment: 'fixed' }}
+      style={{ backgroundImage: "url('/landing_bg.png')", backgroundSize: 'cover', backgroundAttachment: 'fixed', backgroundColor: "rgba(255, 255, 255, 0.65)", backgroundBlendMode: 'lighten'}}
     >
-      <div className="min-h-screen bg-background/95 backdrop-blur-sm">
+      <div className="min-h-screen backdrop-blur-sm">
         <div className="mx-auto max-w-7xl space-y-6 p-6">
           {/* Header with Logo */}
           <header className="flex flex-col items-center justify-center pt-8 pb-6">
@@ -217,7 +220,14 @@ export function APMDashboard() {
                           <p className="text-sm text-muted-foreground mb-3">
                             {alert.message}
                           </p>
-                          <Button variant="link" className="p-0 h-auto text-primary">
+                          <Button 
+                            variant="link" 
+                            className="p-0 h-auto text-primary"
+                            onClick={() => {
+                              setSelectedAlertId(alert.id)
+                              setAlertModalOpen(true)
+                            }}
+                          >
                             View more
                             <ArrowUpRight className="w-3 h-3 ml-1" />
                           </Button>
@@ -323,6 +333,14 @@ export function APMDashboard() {
           </Tabs>
         </div>
       </div>
+
+      {/* Alert Details Modal */}
+      <AlertDetailsModal
+        open={alertModalOpen}
+        onOpenChange={setAlertModalOpen}
+        alerts={mockAlerts}
+        selectedAlertId={selectedAlertId}
+      />
     </div>
   )
 }
