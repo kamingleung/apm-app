@@ -39,6 +39,15 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AlertDetailsModal } from "@/components/alert-details-modal"
+import { FaultRateTrendChart } from "@/components/ui/fault-rate-trend-chart"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 // Mock data for the dashboard
 const mockMetrics = {
@@ -110,10 +119,31 @@ const suggestedQueries = [
 ]
 
 const topServicesByFaultRate = [
-  { service: "frontend-proxy", faultRate: 58.62 },
-  { service: "checkout", faultRate: 58.45 },
-  { service: "frontend", faultRate: 55.03 },
-  { service: "flagd", faultRate: 24.49 },
+  { 
+    service: "checkout", 
+    faultRate: 58.8, 
+    trendData: [45, 48, 52, 55, 58, 60, 59, 58, 57, 58, 59, 60, 59, 58.5, 58.8] 
+  },
+  { 
+    service: "frontend", 
+    faultRate: 24.5, 
+    trendData: [18, 20, 22, 25, 28, 26, 24, 23, 24, 25, 26, 25, 24, 24.2, 24.5] 
+  },
+  { 
+    service: "payment-gateway", 
+    faultRate: 12.3, 
+    trendData: [8, 9, 10, 11, 13, 15, 14, 13, 12, 11, 12, 13, 12.5, 12.8, 12.3] 
+  },
+  { 
+    service: "recommendation", 
+    faultRate: 5.7, 
+    trendData: [2, 3, 4, 5, 6, 7, 6.5, 6, 5.5, 5, 5.2, 5.5, 5.8, 5.9, 5.7] 
+  },
+  { 
+    service: "frontend-proxy", 
+    faultRate: 0.8, 
+    trendData: [0.2, 0.3, 0.5, 0.6, 0.8, 1.0, 0.9, 0.8, 0.7, 0.6, 0.7, 0.8, 0.9, 0.85, 0.8] 
+  },
 ]
 
 const topDependencyPaths = [
@@ -248,30 +278,42 @@ export function APMDashboard() {
                     <CardHeader>
                       <CardTitle className="text-base">Top services by fault rate</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {topServicesByFaultRate.map((item, index) => (
-                          <div key={index} className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <Button 
-                                variant="link" 
-                                className="p-0 h-auto text-primary font-normal"
-                              >
-                                {item.service}
-                              </Button>
-                              <span className="text-sm text-foreground font-medium">
-                                {item.faultRate.toFixed(2)}%
-                              </span>
-                            </div>
-                            <div className="w-full bg-muted rounded-full h-2">
-                              <div 
-                                className="bg-primary h-2 rounded-full transition-all"
-                                style={{ width: `${item.faultRate}%` }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                    <CardContent className="px-6 pb-6">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[200px] pl-0">Service</TableHead>
+                            <TableHead className="text-right pr-0">Avg. failure ratio</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {topServicesByFaultRate.map((item, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="pl-0">
+                                <Button 
+                                  variant="link" 
+                                  className="p-0 h-auto text-primary font-normal"
+                                >
+                                  {item.service}
+                                </Button>
+                              </TableCell>
+                              <TableCell className="pr-0">
+                                <div className="flex items-center justify-end gap-3">
+                                  <span className="text-sm text-foreground font-medium min-w-[50px] text-right">
+                                    {item.faultRate.toFixed(1)}%
+                                  </span>
+                                  <div className="w-[120px] h-[30px]">
+                                    <FaultRateTrendChart 
+                                      data={item.trendData}
+                                      color="#ef4444"
+                                    />
+                                  </div>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </CardContent>
                   </Card>
 

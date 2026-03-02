@@ -509,11 +509,12 @@ export const getEventsByService = (serviceId: string): Event[] => {
 }
 
 // Top services by fault rate
-export const getTopServicesByFaultRate = (limit: number = 5): Array<{name: string, faultRate: string, color: string}> => {
+export const getTopServicesByFaultRate = (limit: number = 5): Array<{name: string, faultRate: string, trendData: number[], color: string}> => {
   return services
     .map(service => ({
       name: service.name,
       faultRate: service.errorRate,
+      trendData: service.errorsTimeSeries || [],
       color: parseFloat(service.errorRate) > 20 ? "bg-destructive" : 
              parseFloat(service.errorRate) > 5 ? "bg-warning" : "bg-success"
     }))
