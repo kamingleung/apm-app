@@ -147,10 +147,36 @@ const topServicesByFaultRate = [
 ]
 
 const topDependencyPaths = [
-  { dependency: "checkout", service: "frontend", faultRate: 100.00 },
-  { dependency: "recommendation", service: "frontend", faultRate: 100.00 },
-  { dependency: "frontend", service: "frontend-proxy", faultRate: 57.83 },
-  { dependency: "product-reviews", service: "frontend", faultRate: 47.06 },
+  { 
+    dependency: "checkout", 
+    service: "frontend", 
+    faultRate: 100.0,
+    trendData: [95, 96, 97, 98, 99, 100, 100, 99, 98, 99, 100, 100, 99, 99.5, 100]
+  },
+  { 
+    dependency: "recommendation", 
+    service: "frontend", 
+    faultRate: 100.0,
+    trendData: [92, 94, 96, 98, 99, 100, 100, 100, 99, 98, 99, 100, 100, 100, 100]
+  },
+  { 
+    dependency: "frontend", 
+    service: "frontend-proxy", 
+    faultRate: 57.8,
+    trendData: [48, 50, 52, 54, 56, 58, 59, 58, 57, 56, 57, 58, 58.5, 58, 57.8]
+  },
+  { 
+    dependency: "product-reviews", 
+    service: "frontend", 
+    faultRate: 47.1,
+    trendData: [38, 40, 42, 45, 47, 49, 48, 47, 46, 45, 46, 47, 47.5, 47.2, 47.1]
+  },
+  { 
+    dependency: "cart-service", 
+    service: "checkout", 
+    faultRate: 32.4,
+    trendData: [25, 27, 29, 31, 33, 35, 34, 33, 32, 31, 32, 33, 32.8, 32.5, 32.4]
+  },
 ]
 
 export function APMDashboard() {
@@ -322,39 +348,51 @@ export function APMDashboard() {
                     <CardHeader>
                       <CardTitle className="text-base">Top dependency paths by fault rate</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {topDependencyPaths.map((item, index) => (
-                          <div key={index} className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <Button 
-                                  variant="link" 
-                                  className="p-0 h-auto text-primary font-normal"
-                                >
-                                  {item.dependency}
-                                </Button>
-                                <ArrowUpRight className="w-3 h-3 text-muted-foreground" />
-                                <Button 
-                                  variant="link" 
-                                  className="p-0 h-auto text-primary font-normal"
-                                >
-                                  {item.service}
-                                </Button>
-                              </div>
-                              <span className="text-sm text-foreground font-medium">
-                                {item.faultRate.toFixed(2)}%
-                              </span>
-                            </div>
-                            <div className="w-full bg-muted rounded-full h-2">
-                              <div 
-                                className="bg-primary h-2 rounded-full transition-all"
-                                style={{ width: `${item.faultRate}%` }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                    <CardContent className="px-6 pb-6">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[200px] pl-0">Dependency path</TableHead>
+                            <TableHead className="text-right pr-0">Avg. failure ratio</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {topDependencyPaths.map((item, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="pl-0">
+                                <div className="flex items-center gap-2">
+                                  <Button 
+                                    variant="link" 
+                                    className="p-0 h-auto text-primary font-normal"
+                                  >
+                                    {item.dependency}
+                                  </Button>
+                                  <ArrowUpRight className="w-3 h-3 text-muted-foreground" />
+                                  <Button 
+                                    variant="link" 
+                                    className="p-0 h-auto text-primary font-normal"
+                                  >
+                                    {item.service}
+                                  </Button>
+                                </div>
+                              </TableCell>
+                              <TableCell className="pr-0">
+                                <div className="flex items-center justify-end gap-3">
+                                  <span className="text-sm text-foreground font-medium min-w-[50px] text-right">
+                                    {item.faultRate.toFixed(1)}%
+                                  </span>
+                                  <div className="w-[120px] h-[30px]">
+                                    <FaultRateTrendChart 
+                                      data={item.trendData}
+                                      color="#ef4444"
+                                    />
+                                  </div>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </CardContent>
                   </Card>
                 </div>
