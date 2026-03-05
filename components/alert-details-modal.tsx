@@ -354,11 +354,16 @@ export function AlertDetailsModal({
                 {selectedAlert ? (
                   <>
                     <header className="p-3 sm:p-4 border-b border-border flex-shrink-0">
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-destructive flex-shrink-0" />
-                        <h2 className="text-base sm:text-xl font-semibold text-foreground">
-                          {selectedAlert.title}
-                        </h2>
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-destructive flex-shrink-0" />
+                          <h2 className="text-base sm:text-xl font-semibold text-foreground truncate">
+                            {selectedAlert.title}
+                          </h2>
+                        </div>
+                        <Button variant="default" size="sm" className="flex-shrink-0">
+                          Start investigation
+                        </Button>
                       </div>
                     </header>
 
